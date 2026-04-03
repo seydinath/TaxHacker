@@ -22,10 +22,10 @@ export default function LandingPage() {
             <ColoredText className="text-2xl font-bold">TaxHacker</ColoredText>
           </Link>
           <Link
-            href="/enter"
+            href="/dashboard"
             className="cursor-pointer font-medium px-4 py-2 rounded-full border-2 border-gradient-to-r from-pink-300 to-indigo-300 hover:from-pink-400 hover:to-indigo-400 bg-white/80 hover:bg-white transition-all duration-300 hover:scale-105 text-xs md:text-sm"
           >
-            Se Connecter
+            Dashboard
           </Link>
         </div>
       </header>
@@ -48,12 +48,12 @@ export default function LandingPage() {
             <p className="text-xl text-gray-700 mb-8 max-w-2xl mx-auto font-medium">
               Application de comptabilité auto-hébergée créée pour les freelancers, les indie-hackers et les petites entreprises
             </p>
-            <div className="flex gap-4 justify-center text-sm md:text-lg">
+            <div className="flex gap-4 justify-center text-sm md:text-lg flex-wrap">
               <Link
-                href="#start"
+                href="/dashboard"
                 className="px-8 py-4 bg-gradient-to-r from-pink-600 to-indigo-600 text-white font-bold rounded-full hover:from-pink-700 hover:to-indigo-700 transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-110 border-2 border-white/20"
               >
-                Commencer ✨
+                Accéder au Dashboard ✨
               </Link>
               <Link
                 href="mailto:support@taxhacker.local"
@@ -347,13 +347,14 @@ export default function LandingPage() {
                   Apportez vos propres clés (OpenAI, Gemini, Mistral, etc.)
                 </li>
               </ul>
-              <Link
-                href="https://github.com/TaxHacker/TaxHacker"
+              <a
+                href="https://github.com/seydinath"
                 target="_blank"
+                rel="noreferrer"
                 className="block w-full text-center px-6 py-4 bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-bold rounded-full hover:from-violet-700 hover:to-indigo-700 transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-110"
               >
-                Github + Docker Compose 🐳
-              </Link>
+                Github Seydinath 🐳
+              </a>
             </div>
 
             {/* Cloud Version */}
@@ -521,12 +522,12 @@ export default function LandingPage() {
               <div className="flex flex-col gap-4 max-w-md mx-auto">
                 <div className="flex flex-wrap items-center justify-center gap-4">
                   <a
-                    href="https://github.com/TaxHacker/TaxHacker"
+                    href="https://github.com/seydinath"
                     target="_blank"
                     rel="noreferrer"
                     className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-medium rounded-full hover:opacity-90 transition-all shadow-lg shadow-purple-500/20"
                   >
-                    Voir le dépôt GitHub
+                    Voir le profil GitHub
                   </a>
                 </div>
               </div>
@@ -538,12 +539,14 @@ export default function LandingPage() {
       <footer className="py-8 px-8 bg-gradient-to-r from-pink-50 to-indigo-50 border-t-4 border-pink-200">
         <div className="max-w-7xl mx-auto text-center text-sm text-gray-600">
           Fait avec ❤️ pour vos impôts par l'équipe{" "}
-          <Link
-            href="https://github.com/TaxHacker"
+          <a
+            href="https://github.com/seydinath"
             className="underline font-semibold hover:text-pink-600 transition-colors"
+            target="_blank"
+            rel="noreferrer"
           >
-            TaxHacker
-          </Link>
+            Seydinath
+          </a>
         </div>
 
         <section className="py-12 px-8">
@@ -576,13 +579,14 @@ export default function LandingPage() {
               >
                 Politique de Cookies
               </Link>
-              <Link
-                href="https://github.com/TaxHacker/TaxHacker"
+              <a
+                href="https://github.com/seydinath"
                 target="_blank"
+                rel="noreferrer"
                 className="text-sm text-gray-600 hover:text-pink-600 font-medium transition-colors"
               >
-                Code Source
-              </Link>
+                Profil GitHub
+              </a>
             </div>
           </div>
         </section>
