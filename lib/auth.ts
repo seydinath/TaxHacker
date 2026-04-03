@@ -98,6 +98,25 @@ export async function getCurrentUser(): Promise<User> {
   redirect(config.auth.loginUrl)
 }
 
+export async function getCurrentUserOrNull(): Promise<User | null> {
+  if (config.selfHosted.isEnabled) {
+    const user = await getSelfHostedUser()
+    return user || null
+  }
+
+  // Try to return user from session
+  const session = await getSession()
+  if (session && session.user) {
+    const user = await getUserById(session.user.id)
+    if (user) {
+      return user
+    }
+  }
+
+  // No session or user found - return null instead of redirecting
+  return null
+}
+
 export function isSubscriptionExpired(user: User) {
   if (config.selfHosted.isEnabled) {
     return false

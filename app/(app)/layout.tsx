@@ -4,7 +4,7 @@ import MobileMenu from "@/components/sidebar/mobile-menu"
 import { AppSidebar } from "@/components/sidebar/sidebar"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { Toaster } from "@/components/ui/sonner"
-import { getCurrentUser, isSubscriptionExpired } from "@/lib/auth"
+import { getCurrentUserOrNull, isSubscriptionExpired } from "@/lib/auth"
 import config from "@/lib/config"
 import { getUnsortedFilesCount } from "@/models/files"
 import type { Metadata, Viewport } from "next"
@@ -30,8 +30,26 @@ export const viewport: Viewport = {
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const user = await getCurrentUser()
-  const unsortedFilesCount = await getUnsortedFilesCount(user.id)
+  const userOrNull = await getCurrentUserOrNull()
+  let unsortedFilesCount = 0
+
+  // If no user, use default demo user
+  const user = userOrNull || {
+    id: "demo",
+    name: "Demo User",
+    email: "demo@taxhacker.local",
+    avatar: undefined,
+    membershipPlan: "unlimited",
+    storageUsed: 0,
+    storageLimit: -1,
+    aiBalance: 0,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  } as any
+
+  if (userOrNull) {
+    unsortedFilesCount = await getUnsortedFilesCount(userOrNull.id)
+  }
 
   const userProfile = {
     id: user.id,
