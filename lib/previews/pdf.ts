@@ -4,14 +4,19 @@ import { fileExists, getUserPreviewsDirectory, safePathJoin } from "@/lib/files"
 import { User } from "@/prisma/client"
 import fs from "fs/promises"
 import path from "path"
-import { fromPath } from "pdf2pic"
+import { exec } from "child_process"
+import { promisify } from "util"
+import sharp from "sharp"
 import config from "../config"
+
+const execAsync = promisify(exec)
 
 export async function pdfToImages(user: User, origFilePath: string): Promise<{ contentType: string; pages: string[] }> {
   const userPreviewsDirectory = getUserPreviewsDirectory(user)
   await fs.mkdir(userPreviewsDirectory, { recursive: true })
 
   const basename = path.basename(origFilePath, path.extname(origFilePath))
+  
   // Check if converted pages already exist
   const existingPages: string[] = []
   for (let i = 1; i <= config.upload.pdfs.maxPages; i++) {
@@ -27,28 +32,82 @@ export async function pdfToImages(user: User, origFilePath: string): Promise<{ c
     return { contentType: "image/webp", pages: existingPages }
   }
 
-  // If not — convert the file as store in previews folder
-  const pdf2picOptions = {
-    density: config.upload.pdfs.dpi,
-    saveFilename: basename,
-    savePath: userPreviewsDirectory,
-    format: "webp",
-    quality: config.upload.pdfs.quality,
-    width: config.upload.pdfs.maxWidth,
-    height: config.upload.pdfs.maxHeight,
-    preserveAspectRatio: true,
-  }
+  // Convert PDF pages to WebP using Ghostscript
+  const tempDir = path.join(userPreviewsDirectory, `.temp_${basename}`)
+  await fs.mkdir(tempDir, { recursive: true })
 
   try {
-    const convert = fromPath(origFilePath, pdf2picOptions)
-    const results = await convert.bulk(-1, { responseType: "image" }) // TODO: respect MAX_PAGES here too
-    const paths = results.filter((result) => result && result.path).map((result) => result.path) as string[]
+    const maxPages = config.upload.pdfs.maxPages
+    const dpi = config.upload.pdfs.dpi
+    const pngPattern = path.join(tempDir, `page-%d.png`)
+    
+    // Use Ghostscript to convert PDF pages to PNG
+    // -dNOPAUSE: Don't pause after each page
+    // -dBATCH: Exit after processing all pages
+    // -sDEVICE=pngalpha: PNG with alpha channel
+    // -r150: Resolution (DPI)
+    // -dFirstPage/dLastPage: Page range
+    const gsCommand = [
+      "gs",
+      "-dNOPAUSE",
+      "-dBATCH",
+      "-sDEVICE=pngalpha",
+      `-r${dpi}`,
+      `-dFIRSTPage=1`,
+      `-dLASTPage=${maxPages}`,
+      `-sOutputFile="${pngPattern}"`,
+      `"${origFilePath}"`,
+    ].join(" ")
+
+    await execAsync(gsCommand, {
+      maxBuffer: 256 * 1024 * 1024,
+      timeout: 300000, // 5 minutes
+    })
+
+    // Convert PNG files to WebP and collect results
+    const results: string[] = []
+    for (let i = 1; i <= maxPages; i++) {
+      const pngPath = path.join(tempDir, `page-${i}.png`)
+      
+      // Check if PNG exists
+      if (!(await fileExists(pngPath))) {
+        break
+      }
+
+      const webpPath = safePathJoin(userPreviewsDirectory, `${basename}.${i}.webp`)
+      
+      // Convert PNG to WebP using sharp
+      await sharp(pngPath)
+        .webp({
+          quality: config.upload.pdfs.quality,
+          alphaQuality: config.upload.pdfs.quality,
+        })
+        .resize(config.upload.pdfs.maxWidth, config.upload.pdfs.maxHeight, {
+          fit: "inside",
+          withoutEnlargement: true,
+        })
+        .toFile(webpPath)
+
+      results.push(webpPath)
+    }
+
+    if (results.length === 0) {
+      throw new Error("No pages were converted from PDF")
+    }
+
     return {
       contentType: "image/webp",
-      pages: paths,
+      pages: results,
     }
   } catch (error) {
     console.error("Error converting PDF to image:", error)
     throw error
+  } finally {
+    // Cleanup temp directory
+    try {
+      await fs.rm(tempDir, { recursive: true, force: true })
+    } catch (cleanupError) {
+      console.warn("Failed to cleanup temp directory:", cleanupError)
+    }
   }
 }

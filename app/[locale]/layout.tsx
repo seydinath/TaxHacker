@@ -7,7 +7,8 @@ export default async function LocaleLayout({
 }: {
   children: React.ReactNode
 }) {
-  const locale = await getLocale()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _locale = await getLocale()
   const messages = await getMessages()
 
   return (

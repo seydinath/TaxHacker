@@ -89,7 +89,7 @@ export default function LandingPage() {
           </div>
 
           {/* AI Scanner Feature */}
-          <div className=\"flex flex-wrap items-center gap-12 mb-20 bg-slate-50/50 p-8 rounded-3xl shadow-xl ring-2 ring-gradient-to-r from-pink-200 to-indigo-200 hover:shadow-2xl transition-all duration-500 group\">
+          <div className="flex flex-wrap items-center gap-12 mb-20 bg-slate-50/50 p-8 rounded-3xl shadow-xl ring-2 ring-gradient-to-r from-pink-200 to-indigo-200 hover:shadow-2xl transition-all duration-500 group">
             <div className="flex-1 min-w-60">
               <div className="inline-block px-4 py-2 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-sm font-bold mb-4 shadow-lg">
                 🤖 Alimentée par LLM
@@ -322,7 +322,7 @@ export default function LandingPage() {
           </div>
           <div className="grid md:grid-cols-2 gap-16">
             {/* Self-Hosted Version */}
-            <div className=\"bg-slate-100/50 p-8 rounded-3xl shadow-xl ring-2 ring-gradient-to-r from-violet-200 to-indigo-200 hover:shadow-2xl transition-all duration-500 group\">
+            <div className="bg-slate-100/50 p-8 rounded-3xl shadow-xl ring-2 ring-gradient-to-r from-violet-200 to-indigo-200 hover:shadow-2xl transition-all duration-500 group">
               <div className="inline-block px-4 py-2 rounded-full bg-gradient-to-r from-violet-500 to-indigo-600 text-white text-sm font-bold mb-6 shadow-lg">
                 🏠 Utiliser Votre Propre Serveur
               </div>
@@ -357,7 +357,7 @@ export default function LandingPage() {
             </div>
 
             {/* Cloud Version */}
-            <div className=\"bg-slate-100/50 p-8 rounded-3xl shadow-xl ring-2 ring-gradient-to-r from-pink-200 to-purple-200 hover:shadow-2xl transition-all duration-500 group relative\">
+            <div className="bg-slate-100/50 p-8 rounded-3xl shadow-xl ring-2 ring-gradient-to-r from-pink-200 to-purple-200 hover:shadow-2xl transition-all duration-500 group relative">
               <div className="inline-block px-4 py-2 rounded-full bg-gradient-to-r from-pink-500 to-purple-600 text-white text-sm font-bold mb-6 shadow-lg">
                 ☁️ Nous l'Hébergeons Pour Vous
               </div>
@@ -411,7 +411,7 @@ export default function LandingPage() {
 
           <div className="grid md:grid-cols-2 gap-8 mb-16">
             {/* AI Improvements */}
-            <div className=\"bg-slate-100/50 p-8 rounded-3xl shadow-xl ring-2 ring-gradient-to-r from-purple-200 to-indigo-200 hover:shadow-2xl transition-all duration-500 hover:scale-105\">
+            <div className="bg-slate-100/50 p-8 rounded-3xl shadow-xl ring-2 ring-gradient-to-r from-purple-200 to-indigo-200 hover:shadow-2xl transition-all duration-500 hover:scale-105">
               <div className="flex items-center gap-3 mb-4">
                 <span className="text-3xl">🤖</span>
                 <h3 className="text-xl font-bold bg-gradient-to-r from-purple-700 to-indigo-700 bg-clip-text text-transparent">
@@ -439,7 +439,7 @@ export default function LandingPage() {
             </div>
 
             {/* Smart Reports */}
-            <div className=\"bg-slate-100/50 p-8 rounded-3xl shadow-xl ring-2 ring-gradient-to-r from-pink-200 to-rose-200 hover:shadow-2xl transition-all duration-500 hover:scale-105\">
+            <div className="bg-slate-100/50 p-8 rounded-3xl shadow-xl ring-2 ring-gradient-to-r from-pink-200 to-rose-200 hover:shadow-2xl transition-all duration-500 hover:scale-105">
               <div className="flex items-center gap-3 mb-4">
                 <span className="text-3xl">📊</span>
                 <h3 className="text-xl font-bold bg-gradient-to-r from-pink-700 to-rose-700 bg-clip-text text-transparent">
@@ -463,7 +463,7 @@ export default function LandingPage() {
             </div>
 
             {/* Transaction Review */}
-            <div className=\"bg-slate-100/50 p-8 rounded-3xl shadow-xl ring-2 ring-gradient-to-r from-green-200 to-emerald-200 hover:shadow-2xl transition-all duration-500 hover:scale-105\">
+            <div className="bg-slate-100/50 p-8 rounded-3xl shadow-xl ring-2 ring-gradient-to-r from-green-200 to-emerald-200 hover:shadow-2xl transition-all duration-500 hover:scale-105">
               <div className="flex items-center gap-3 mb-4">
                 <span className="text-3xl">📥</span>
                 <h3 className="text-xl font-bold bg-gradient-to-r from-green-700 to-emerald-700 bg-clip-text text-transparent">
@@ -487,7 +487,7 @@ export default function LandingPage() {
             </div>
 
             {/* Custom Fields */}
-            <div className=\"bg-slate-100/50 p-8 rounded-3xl shadow-xl ring-2 ring-gradient-to-r from-orange-200 to-amber-200 hover:shadow-2xl transition-all duration-500 hover:scale-105\">
+            <div className="bg-slate-100/50 p-8 rounded-3xl shadow-xl ring-2 ring-gradient-to-r from-orange-200 to-amber-200 hover:shadow-2xl transition-all duration-500 hover:scale-105">
               <div className="flex items-center gap-3 mb-4">
                 <span className="text-3xl">🧩</span>
                 <h3 className="text-xl font-bold bg-gradient-to-r from-orange-700 to-amber-700 bg-clip-text text-transparent">

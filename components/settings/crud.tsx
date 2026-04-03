@@ -28,7 +28,7 @@ export function CrudTable<T extends { [key: string]: any }>({ items, columns, on
   const [editingId, setEditingId] = useState<string | null>(null)
   const [newItem, setNewItem] = useState<Partial<T>>(itemDefaults(columns))
   const [editingItem, setEditingItem] = useState<Partial<T>>(itemDefaults(columns))
-  const [optimisticItems, addOptimisticItem] = useOptimistic(items, (state, newItem: T) => [...state, newItem])
+  const [optimisticItems] = useOptimistic(items, (state, newItem: T) => [...state, newItem])
 
   const FormCell = (item: T, column: CrudColumn<T>) => {
     if (column.type === "checkbox") {

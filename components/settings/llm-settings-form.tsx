@@ -183,6 +183,7 @@ type SortableProviderBlockProps = {
   handleValueChange: (providerKey: string, field: "apiKey" | "model" | "baseUrl", value: string) => void;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function SortableProviderBlock({ id, idx, providerKey, value, handleValueChange }: SortableProviderBlockProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id })
 
@@ -217,11 +218,7 @@ function SortableProviderBlock({ id, idx, providerKey, value, handleValueChange 
           value={value.apiKey}
           onChange={e => handleValueChange(provider.key, "apiKey", e.target.value)}
           className="flex-1 border rounded px-2 py-1"
-<<<<<<< HEAD
           placeholder="Clé API"
-=======
-          placeholder={provider.baseUrlName ? "API key (optional)" : "API key"}
->>>>>>> bcf92d6e9ea2cf4eb86faf3b00924a3577b726c2
         />
         <input
           type="text"
