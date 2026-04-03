@@ -12,11 +12,7 @@
 
 </div>
 
-<<<<<<< HEAD
 **TaxHacker** est une application de comptabilité auto-hébergée conçue pour les freelances, les PME et les indépendants qui veulent automatiser le suivi des dépenses et revenus avec l'IA.
-=======
-> ☝️ I'm currently looking for a new job! Particularly interested in companies in Berlin or remote positions in Germany. Here's [my CV](https://raw.githubusercontent.com/vas3k/vas3k/master/cv.pdf) and my [Linkedin profile](https://www.linkedin.com/in/vas3k/). Thank you 🙏
->>>>>>> bcf92d6e9ea2cf4eb86faf3b00924a3577b726c2
 
 Photographiez vos reçus ou téléchargez des factures PDF : TaxHacker extraira automatiquement les montants, dates, commerces, taxes et items, et les sauvegarde dans une base de données structurée. Créez des champs personnalisés avec vos propres prompts IA pour extraire tout ce dont vous avez besoin.
 

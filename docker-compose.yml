@@ -1,6 +1,6 @@
 services:
   app:
-    image: ghcr.io/vas3k/taxhacker:latest
+    image: ${DOCKER_REGISTRY:-taxhacker}:${DOCKER_TAG:-latest}
     ports:
       - "7331:7331"
     environment:
