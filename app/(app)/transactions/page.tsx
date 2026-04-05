@@ -5,7 +5,7 @@ import { TransactionList } from "@/components/transactions/list"
 import { NewTransactionDialog } from "@/components/transactions/new"
 import { Pagination } from "@/components/transactions/pagination"
 import { Button } from "@/components/ui/button"
-import { getCurrentUser } from "@/lib/auth"
+import { getCurrentUserOrNull } from "@/lib/auth"
 import { getCategories } from "@/models/categories"
 import { getFields } from "@/models/fields"
 import { getProjects } from "@/models/projects"
@@ -23,7 +23,26 @@ const TRANSACTIONS_PER_PAGE = 500
 
 export default async function TransactionsPage({ searchParams }: { searchParams: Promise<TransactionFilters> }) {
   const { page, ...filters } = await searchParams
-  const user = await getCurrentUser()
+  const userOrNull = await getCurrentUserOrNull()
+  const user = (userOrNull || {
+    id: "demo",
+    name: "Demo User",
+    email: "demo@taxhacker.local",
+    avatar: null,
+    stripeCustomerId: null,
+    membershipPlan: "unlimited",
+    membershipExpiresAt: null,
+    emailVerified: false,
+    storageUsed: 0,
+    storageLimit: -1,
+    aiBalance: 0,
+    businessName: null,
+    businessAddress: null,
+    businessBankDetails: null,
+    businessLogo: null,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  }) as any
   const { transactions, total } = await getTransactions(user.id, filters, {
     limit: TRANSACTIONS_PER_PAGE,
     offset: ((page ?? 1) - 1) * TRANSACTIONS_PER_PAGE,

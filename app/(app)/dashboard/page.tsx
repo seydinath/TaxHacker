@@ -8,7 +8,7 @@ import config from "@/lib/config"
 import { getUnsortedFiles } from "@/models/files"
 import { getSettings, SettingsMap } from "@/models/settings"
 import { TransactionFilters } from "@/models/transactions"
-import { File } from "@/prisma/client"
+import type { File } from "@/prisma/client"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {

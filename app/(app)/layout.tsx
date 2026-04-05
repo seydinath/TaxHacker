@@ -34,7 +34,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   let unsortedFilesCount = 0
 
   // If no user, use default demo user
-  const user = userOrNull || {
+  const user = (userOrNull || {
     id: "demo",
     name: "Demo User",
     email: "demo@taxhacker.local",
@@ -45,7 +45,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     aiBalance: 0,
     createdAt: new Date(),
     updatedAt: new Date(),
-  } as any
+  }) as any
 
   if (userOrNull) {
     unsortedFilesCount = await getUnsortedFilesCount(userOrNull.id)

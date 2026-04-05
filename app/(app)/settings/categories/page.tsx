@@ -1,12 +1,31 @@
 import { addCategoryAction, deleteCategoryAction, editCategoryAction } from "@/app/(app)/settings/actions"
 import { CrudTable } from "@/components/settings/crud"
-import { getCurrentUser } from "@/lib/auth"
+import { getCurrentUserOrNull } from "@/lib/auth"
 import { randomHexColor } from "@/lib/utils"
 import { getCategories } from "@/models/categories"
 import { Prisma } from "@/prisma/client"
 
 export default async function CategoriesSettingsPage() {
-  const user = await getCurrentUser()
+  const userOrNull = await getCurrentUserOrNull()
+  const user = (userOrNull || {
+    id: "demo",
+    name: "Demo User",
+    email: "demo@taxhacker.local",
+    avatar: null,
+    stripeCustomerId: null,
+    membershipPlan: "unlimited",
+    membershipExpiresAt: null,
+    emailVerified: false,
+    storageUsed: 0,
+    storageLimit: -1,
+    aiBalance: 0,
+    businessName: null,
+    businessAddress: null,
+    businessBankDetails: null,
+    businessLogo: null,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  }) as any
   const categories = await getCategories(user.id)
   const categoriesWithActions = categories.map((category) => ({
     ...category,

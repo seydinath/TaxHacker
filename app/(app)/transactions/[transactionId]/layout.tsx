@@ -1,4 +1,4 @@
-import { getCurrentUser } from "@/lib/auth"
+import { getCurrentUserOrNull } from "@/lib/auth"
 import { getTransactionById } from "@/models/transactions"
 import { notFound } from "next/navigation"
 
@@ -10,7 +10,26 @@ export default async function TransactionLayout({
   params: Promise<{ transactionId: string }>
 }) {
   const { transactionId } = await params
-  const user = await getCurrentUser()
+  const userOrNull = await getCurrentUserOrNull()
+  const user = (userOrNull || {
+    id: "demo",
+    name: "Demo User",
+    email: "demo@taxhacker.local",
+    avatar: null,
+    stripeCustomerId: null,
+    membershipPlan: "unlimited",
+    membershipExpiresAt: null,
+    emailVerified: false,
+    storageUsed: 0,
+    storageLimit: -1,
+    aiBalance: 0,
+    businessName: null,
+    businessAddress: null,
+    businessBankDetails: null,
+    businessLogo: null,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  }) as any
   const transaction = await getTransactionById(transactionId, user.id)
 
   if (!transaction) {

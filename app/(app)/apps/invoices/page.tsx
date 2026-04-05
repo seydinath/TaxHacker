@@ -1,4 +1,4 @@
-import { getCurrentUser } from "@/lib/auth"
+import { getCurrentUserOrNull } from "@/lib/auth"
 import { getAppData } from "@/models/apps"
 import { getCurrencies } from "@/models/currencies"
 import { getSettings } from "@/models/settings"
@@ -11,7 +11,26 @@ export type InvoiceAppData = {
 }
 
 export default async function InvoicesApp() {
-  const user = await getCurrentUser()
+  const userOrNull = await getCurrentUserOrNull()
+  const user = userOrNull || {
+    id: "demo",
+    name: "Demo User",
+    email: "demo@taxhacker.local",
+    avatar: null,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    stripeCustomerId: null,
+    membershipPlan: "unlimited",
+    membershipExpiresAt: null,
+    emailVerified: false,
+    storageUsed: 0,
+    storageLimit: -1,
+    aiBalance: 0,
+    businessName: null,
+    businessAddress: null,
+    businessBankDetails: null,
+    businessLogo: null,
+  } as any
   const settings = await getSettings(user.id)
   const currencies = await getCurrencies(user.id)
   const appData = (await getAppData(user, "invoices")) as InvoiceAppData | null

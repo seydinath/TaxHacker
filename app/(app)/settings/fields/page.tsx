@@ -1,11 +1,30 @@
 import { addFieldAction, deleteFieldAction, editFieldAction } from "@/app/(app)/settings/actions"
 import { CrudTable } from "@/components/settings/crud"
-import { getCurrentUser } from "@/lib/auth"
+import { getCurrentUserOrNull } from "@/lib/auth"
 import { getFields } from "@/models/fields"
 import { Prisma } from "@/prisma/client"
 
 export default async function FieldsSettingsPage() {
-  const user = await getCurrentUser()
+  const userOrNull = await getCurrentUserOrNull()
+  const user = (userOrNull || {
+    id: "demo",
+    name: "Demo User",
+    email: "demo@taxhacker.local",
+    avatar: null,
+    stripeCustomerId: null,
+    membershipPlan: "unlimited",
+    membershipExpiresAt: null,
+    emailVerified: false,
+    storageUsed: 0,
+    storageLimit: -1,
+    aiBalance: 0,
+    businessName: null,
+    businessAddress: null,
+    businessBankDetails: null,
+    businessLogo: null,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  }) as any
   const fields = await getFields(user.id)
   const fieldsWithActions = fields.map((field) => ({
     ...field,
