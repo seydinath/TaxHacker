@@ -2,7 +2,7 @@ import { FiltersWidget } from "@/components/dashboard/filters-widget"
 import { IncomeExpenseGraph } from "@/components/dashboard/income-expense-graph"
 import { ProjectsWidget } from "@/components/dashboard/projects-widget"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { getCurrentUser } from "@/lib/auth"
+import { getCurrentUserOrNull } from "@/lib/auth"
 import { formatCurrency } from "@/lib/utils"
 import { getProjects } from "@/models/projects"
 import { getSettings } from "@/models/settings"
@@ -12,7 +12,19 @@ import { ArrowDown, ArrowUp, BicepsFlexed } from "lucide-react"
 import Link from "next/link"
 
 export async function StatsWidget({ filters }: { filters: TransactionFilters }) {
-  const user = await getCurrentUser()
+  const user = await getCurrentUserOrNull()
+
+  // For demo user, return empty stats
+  if (!user || user.id === "demo") {
+    return (
+      <div className="flex flex-col gap-5">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold">Aperçu</h2>
+        </div>
+      </div>
+    )
+  }
+
   const projects = await getProjects(user.id)
   const settings = await getSettings(user.id)
   const defaultCurrency = settings.default_currency || "EUR"

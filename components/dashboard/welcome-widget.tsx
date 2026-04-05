@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardDescription, CardTitle } from "@/components/ui/card"
 import { ColoredText } from "@/components/ui/colored-text"
-import { getCurrentUser } from "@/lib/auth"
+import { getCurrentUserOrNull } from "@/lib/auth"
 import { getSettings, updateSettings } from "@/models/settings"
 import { Banknote, ChartBarStacked, FolderOpenDot, Key, TextCursorInput, X } from "lucide-react"
 import { revalidatePath } from "next/cache"
@@ -9,7 +9,13 @@ import Image from "next/image"
 import Link from "next/link"
 
 export async function WelcomeWidget() {
-  const user = await getCurrentUser()
+  const user = await getCurrentUserOrNull()
+
+  // Don't show welcome widget for demo user
+  if (!user || user.id === "demo") {
+    return null
+  }
+
   const settings = await getSettings(user.id)
 
   return (
