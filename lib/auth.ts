@@ -7,7 +7,6 @@ import { APIError } from "better-auth/api"
 import { nextCookies } from "better-auth/next-js"
 import { emailOTP } from "better-auth/plugins/email-otp"
 import { headers } from "next/headers"
-import { redirect } from "next/navigation"
 import { prisma } from "./db"
 import { resend, sendOTPCodeEmail } from "./email"
 
@@ -80,9 +79,27 @@ export async function getCurrentUser(): Promise<User> {
     const user = await getSelfHostedUser()
     if (user) {
       return user
-    } else {
-      redirect(config.selfHosted.redirectUrl)
     }
+    // Return demo user for self-hosted with no user
+    return {
+      id: "demo",
+      name: "Demo User",
+      email: "demo@taxhacker.local",
+      avatar: null,
+      stripeCustomerId: null,
+      membershipPlan: "unlimited",
+      membershipExpiresAt: null,
+      emailVerified: false,
+      storageUsed: 0,
+      storageLimit: -1,
+      aiBalance: 0,
+      businessName: null,
+      businessAddress: null,
+      businessBankDetails: null,
+      businessLogo: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    } as User
   }
 
   // Try to return user from session
@@ -94,8 +111,26 @@ export async function getCurrentUser(): Promise<User> {
     }
   }
 
-  // No session or user found
-  redirect(config.auth.loginUrl)
+  // No session or user found - return demo user instead of redirecting
+  return {
+    id: "demo",
+    name: "Demo User",
+    email: "demo@taxhacker.local",
+    avatar: null,
+    stripeCustomerId: null,
+    membershipPlan: "unlimited",
+    membershipExpiresAt: null,
+    emailVerified: false,
+    storageUsed: 0,
+    storageLimit: -1,
+    aiBalance: 0,
+    businessName: null,
+    businessAddress: null,
+    businessBankDetails: null,
+    businessLogo: null,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  } as User
 }
 
 export async function getCurrentUserOrNull(): Promise<User | null> {
