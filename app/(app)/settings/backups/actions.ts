@@ -1,7 +1,7 @@
 "use server"
 
 import { ActionState } from "@/lib/actions"
-import { getCurrentUser } from "@/lib/auth"
+import { getCurrentUserOrNull } from "@/lib/auth"
 import { prisma } from "@/lib/db"
 import { getUserUploadsDirectory, safePathJoin } from "@/lib/files"
 import { MODEL_BACKUP, modelFromJSON } from "@/models/backups"
@@ -21,7 +21,13 @@ export async function restoreBackupAction(
   _prevState: ActionState<BackupRestoreResult> | null,
   formData: FormData
 ): Promise<ActionState<BackupRestoreResult>> {
-  const user = await getCurrentUser()
+  const user = await getCurrentUserOrNull()
+  
+  // Demo users cannot restore backups
+  if (!user || user.id === "demo") {
+    return { success: false, error: "This action is not available for demo users" }
+  }
+
   const userUploadsDirectory = getUserUploadsDirectory(user)
   const file = formData.get("file") as File
 

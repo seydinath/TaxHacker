@@ -1,4 +1,4 @@
-import { getCurrentUser } from "@/lib/auth"
+import { getCurrentUserOrNull } from "@/lib/auth"
 import { fileExists, getUserUploadsDirectory } from "@/lib/files"
 import { MODEL_BACKUP, modelToJSON } from "@/models/backups"
 import { updateProgress } from "@/models/progress"
@@ -12,7 +12,13 @@ const BACKUP_VERSION = "1.0"
 const PROGRESS_UPDATE_INTERVAL_MS = 2000 // 2 seconds
 
 export async function GET(request: Request) {
-  const user = await getCurrentUser()
+  const user = await getCurrentUserOrNull()
+  
+  // Demo users cannot backup data
+  if (!user || user.id === "demo") {
+    return NextResponse.json({ error: "This feature is not available for demo users" }, { status: 403 })
+  }
+
   const userUploadsDirectory = getUserUploadsDirectory(user)
   const url = new URL(request.url)
   const progressId = url.searchParams.get("progressId")

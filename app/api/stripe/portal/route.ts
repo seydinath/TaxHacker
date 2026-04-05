@@ -1,11 +1,16 @@
-import { getCurrentUser } from "@/lib/auth"
+import { getCurrentUserOrNull } from "@/lib/auth"
 import { stripeClient } from "@/lib/stripe"
 import { NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {
-  const user = await getCurrentUser()
+  const user = await getCurrentUserOrNull()
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  }
+  
+  // Demo users cannot access Stripe portal
+  if (user.id === "demo") {
+    return NextResponse.json({ error: "This feature is not available for demo users" }, { status: 403 })
   }
 
   if (!stripeClient) {

@@ -1,6 +1,6 @@
 "use server"
 
-import { getCurrentUser, isSubscriptionExpired } from "@/lib/auth"
+import { getCurrentUserOrNull, isSubscriptionExpired } from "@/lib/auth"
 import {
   getTransactionFileUploadPath,
   getUserUploadsDirectory,
@@ -48,7 +48,12 @@ export async function saveInvoiceAsTransactionAction(
   formData: InvoiceFormData
 ): Promise<{ success: boolean; error?: string; data?: Transaction }> {
   try {
-    const user = await getCurrentUser()
+    const user = await getCurrentUserOrNull()
+    
+    // Demo users cannot save invoices as transactions
+    if (!user || user.id === "demo") {
+      return { success: false, error: "This action is not available for demo users" }
+    }
 
     // Generate PDF
     const pdfBuffer = await generateInvoicePDF(formData)

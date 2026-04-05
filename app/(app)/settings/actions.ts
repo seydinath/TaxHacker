@@ -9,7 +9,7 @@ import {
 } from "@/forms/settings"
 import { userFormSchema } from "@/forms/users"
 import { ActionState } from "@/lib/actions"
-import { getCurrentUser } from "@/lib/auth"
+import { getCurrentUserOrNull } from "@/lib/auth"
 import { uploadStaticImage } from "@/lib/uploads"
 import { codeFromName, randomHexColor } from "@/lib/utils"
 import { createCategory, deleteCategory, updateCategory } from "@/models/categories"
@@ -26,7 +26,13 @@ export async function saveSettingsAction(
   _prevState: ActionState<SettingsMap> | null,
   formData: FormData
 ): Promise<ActionState<SettingsMap>> {
-  const user = await getCurrentUser()
+  const user = await getCurrentUserOrNull()
+  
+  // Demo users cannot change settings
+  if (!user || user.id === "demo") {
+    return { success: false, error: "This action is not available for demo users" }
+  }
+
   const validatedForm = settingsFormSchema.safeParse(Object.fromEntries(formData))
 
   if (!validatedForm.success) {
@@ -48,7 +54,13 @@ export async function saveProfileAction(
   _prevState: ActionState<User> | null,
   formData: FormData
 ): Promise<ActionState<User>> {
-  const user = await getCurrentUser()
+  const user = await getCurrentUserOrNull()
+  
+  // Demo users cannot change profile
+  if (!user || user.id === "demo") {
+    return { success: false, error: "This action is not available for demo users" }
+  }
+
   const validatedForm = userFormSchema.safeParse(Object.fromEntries(formData))
 
   if (!validatedForm.success) {

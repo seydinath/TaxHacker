@@ -1,4 +1,4 @@
-import { getCurrentUser } from "@/lib/auth"
+import { getCurrentUserOrNull } from "@/lib/auth"
 import { fileExists, fullPathForFile } from "@/lib/files"
 import { EXPORT_AND_IMPORT_FIELD_MAP, ExportFields, ExportFilters } from "@/models/export_and_import"
 import { getFields } from "@/models/fields"
@@ -24,7 +24,13 @@ export async function GET(request: Request) {
   const includeAttachments = url.searchParams.get("includeAttachments") === "true"
   const progressId = url.searchParams.get("progressId")
 
-  const user = await getCurrentUser()
+  const user = await getCurrentUserOrNull()
+  
+  // Demo users cannot export transactions
+  if (!user || user.id === "demo") {
+    return NextResponse.json({ error: "This feature is not available for demo users" }, { status: 403 })
+  }
+  
   const { transactions } = await getTransactions(user.id, filters)
   const existingFields = await getFields(user.id)
 

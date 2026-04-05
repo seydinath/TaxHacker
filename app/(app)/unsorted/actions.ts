@@ -6,7 +6,7 @@ import { buildLLMPrompt } from "@/ai/prompt"
 import { fieldsToJsonSchema } from "@/ai/schema"
 import { transactionFormSchema } from "@/forms/transactions"
 import { ActionState } from "@/lib/actions"
-import { getCurrentUser, isAiBalanceExhausted, isSubscriptionExpired } from "@/lib/auth"
+import { getCurrentUserOrNull, isAiBalanceExhausted, isSubscriptionExpired } from "@/lib/auth"
 import {
   getDirectorySize,
   getTransactionFileUploadPath,
@@ -31,7 +31,12 @@ export async function analyzeFileAction(
   categories: Category[],
   projects: Project[]
 ): Promise<ActionState<AnalysisResult>> {
-  const user = await getCurrentUser()
+  const user = await getCurrentUserOrNull()
+
+  // Demo users cannot analyze files
+  if (!user || user.id === "demo") {
+    return { success: false, error: "This action is not available for demo users" }
+  }
 
   if (!file || file.userId !== user.id) {
     return { success: false, error: "File not found or does not belong to the user" }
@@ -84,7 +89,13 @@ export async function saveFileAsTransactionAction(
   formData: FormData
 ): Promise<ActionState<Transaction>> {
   try {
-    const user = await getCurrentUser()
+    const user = await getCurrentUserOrNull()
+    
+    // Demo users cannot save files as transactions
+    if (!user || user.id === "demo") {
+      return { success: false, error: "This action is not available for demo users" }
+    }
+
     const validatedForm = transactionFormSchema.safeParse(Object.fromEntries(formData.entries()))
 
     if (!validatedForm.success) {
@@ -133,7 +144,13 @@ export async function deleteUnsortedFileAction(
   fileId: string
 ): Promise<ActionState<Transaction>> {
   try {
-    const user = await getCurrentUser()
+    const user = await getCurrentUserOrNull()
+    
+    // Demo users cannot delete unsorted files
+    if (!user || user.id === "demo") {
+      return { success: false, error: "This action is not available for demo users" }
+    }
+
     await deleteFile(fileId, user.id)
     revalidatePath("/unsorted")
     return { success: true }
@@ -148,7 +165,13 @@ export async function splitFileIntoItemsAction(
   formData: FormData
 ): Promise<ActionState<null>> {
   try {
-    const user = await getCurrentUser()
+    const user = await getCurrentUserOrNull()
+    
+    // Demo users cannot split files
+    if (!user || user.id === "demo") {
+      return { success: false, error: "This action is not available for demo users" }
+    }
+
     const fileId = formData.get("fileId") as string
     const items = JSON.parse(formData.get("items") as string) as TransactionData[]
 

@@ -2,7 +2,7 @@
 
 import { transactionFormSchema } from "@/forms/transactions"
 import { ActionState } from "@/lib/actions"
-import { getCurrentUser, isSubscriptionExpired } from "@/lib/auth"
+import { getCurrentUserOrNull, isSubscriptionExpired } from "@/lib/auth"
 import {
   getDirectorySize,
   getTransactionFileUploadPath,
@@ -32,7 +32,13 @@ export async function createTransactionAction(
   formData: FormData
 ): Promise<ActionState<Transaction>> {
   try {
-    const user = await getCurrentUser()
+    const user = await getCurrentUserOrNull()
+    
+    // Demo users cannot create transactions
+    if (!user || user.id === "demo") {
+      return { success: false, error: "This action is not available for demo users" }
+    }
+
     const validatedForm = transactionFormSchema.safeParse(Object.fromEntries(formData.entries()))
 
     if (!validatedForm.success) {
@@ -54,7 +60,13 @@ export async function saveTransactionAction(
   formData: FormData
 ): Promise<ActionState<Transaction>> {
   try {
-    const user = await getCurrentUser()
+    const user = await getCurrentUserOrNull()
+    
+    // Demo users cannot save transactions
+    if (!user || user.id === "demo") {
+      return { success: false, error: "This action is not available for demo users" }
+    }
+
     const transactionId = formData.get("transactionId") as string
     const validatedForm = transactionFormSchema.safeParse(Object.fromEntries(formData.entries()))
 
@@ -77,7 +89,13 @@ export async function deleteTransactionAction(
   transactionId: string
 ): Promise<ActionState<Transaction>> {
   try {
-    const user = await getCurrentUser()
+    const user = await getCurrentUserOrNull()
+    
+    // Demo users cannot delete transactions
+    if (!user || user.id === "demo") {
+      return { success: false, error: "This action is not available for demo users" }
+    }
+
     const transaction = await getTransactionById(transactionId, user.id)
     if (!transaction) throw new Error("Transaction not found")
 
@@ -100,7 +118,13 @@ export async function deleteTransactionFileAction(
     return { success: false, error: "File ID and transaction ID are required" }
   }
 
-  const user = await getCurrentUser()
+  const user = await getCurrentUserOrNull()
+  
+  // Demo users cannot delete files
+  if (!user || user.id === "demo") {
+    return { success: false, error: "This action is not available for demo users" }
+  }
+
   const transaction = await getTransactionById(transactionId, user.id)
   if (!transaction) {
     return { success: false, error: "Transaction not found" }
@@ -131,7 +155,13 @@ export async function uploadTransactionFilesAction(formData: FormData): Promise<
       return { success: false, error: "No files or transaction ID provided" }
     }
 
-    const user = await getCurrentUser()
+    const user = await getCurrentUserOrNull()
+    
+    // Demo users cannot upload transaction files
+    if (!user || user.id === "demo") {
+      return { success: false, error: "This action is not available for demo users" }
+    }
+
     const transaction = await getTransactionById(transactionId, user.id)
     if (!transaction) {
       return { success: false, error: "Transaction not found" }
@@ -204,7 +234,13 @@ export async function uploadTransactionFilesAction(formData: FormData): Promise<
 
 export async function bulkDeleteTransactionsAction(transactionIds: string[]) {
   try {
-    const user = await getCurrentUser()
+    const user = await getCurrentUserOrNull()
+    
+    // Demo users cannot delete transactions
+    if (!user || user.id === "demo") {
+      return { success: false, error: "This action is not available for demo users" }
+    }
+
     await bulkDeleteTransactions(transactionIds, user.id)
     revalidatePath("/transactions")
     return { success: true }
@@ -222,7 +258,12 @@ export async function bulkUpdateTransactionsAction(
   }
 ) {
   try {
-    const user = await getCurrentUser()
+    const user = await getCurrentUserOrNull()
+    
+    // Demo users cannot update transactions
+    if (!user || user.id === "demo") {
+      return { success: false, error: "This action is not available for demo users" }
+    }
     
     // Update each transaction with the provided fields
     const updatePromises = transactionIds.map(id =>
@@ -240,7 +281,13 @@ export async function bulkUpdateTransactionsAction(
 
 export async function updateFieldVisibilityAction(fieldCode: string, isVisible: boolean) {
   try {
-    const user = await getCurrentUser()
+    const user = await getCurrentUserOrNull()
+    
+    // Demo users cannot update fields
+    if (!user || user.id === "demo") {
+      return { success: false, error: "This action is not available for demo users" }
+    }
+
     await updateField(user.id, fieldCode, {
       isVisibleInList: isVisible,
     })

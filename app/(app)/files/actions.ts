@@ -1,7 +1,7 @@
 "use server"
 
 import { ActionState } from "@/lib/actions"
-import { getCurrentUser, isSubscriptionExpired } from "@/lib/auth"
+import { getCurrentUserOrNull, isSubscriptionExpired } from "@/lib/auth"
 import {
   getDirectorySize,
   getUserUploadsDirectory,
@@ -17,7 +17,13 @@ import { revalidatePath } from "next/cache"
 import path from "path"
 
 export async function uploadFilesAction(formData: FormData): Promise<ActionState<null>> {
-  const user = await getCurrentUser()
+  const user = await getCurrentUserOrNull()
+  
+  // Demo users cannot upload files
+  if (!user || user.id === "demo") {
+    return { success: false, error: "This action is not available for demo users" }
+  }
+
   const files = formData.getAll("files") as File[]
 
   // Make sure upload dir exists
